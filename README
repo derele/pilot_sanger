@@ -1,0 +1,5 @@
+Writeup for a pilot sequencing project.
+This will be part of my thesis but will not be published elsewhere.
+
+I'm currently fighting against the unnecessary complexity in the perlies and will try to get more of the code into R. This means into the .Rnw file. 
+Literate LaTex/R using the R-package Sweave!

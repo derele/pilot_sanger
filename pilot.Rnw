@@ -18,26 +18,20 @@
 #load required R libraries
 library(lattice)
 library(xtable)
+setwd("/home/ele/thesis/pilot_sanger/")
 @ 
 
 %% TODO: add contour plots submit to ncbi!
 
 %%%%##########################################################################
 <<echo=false,results=hide,cache=TRUE>>=
-#execute the perl script found in the present folder
-S <- as.data.frame(read.delim(pipe("./pilot.pl"), sep=",", header=FALSE, as.is=TRUE))
-#use the rows specified as count in a new dataframe
-SS <- S[S$V4=="count",]
-SS$V4 <- NULL
-names(SS) <- c("lib","sort", "count")
-SS$count <- as.numeric(as.character(SS$count))
+#execute the perl script found in the present folder if you want to re-run blast searches
+# S <- as.data.frame(read.delim(pipe("./pilot.pl"), sep=",", header=FALSE, as.is=TRUE))
 
-#use the remaining rows in another
-GC <- S[S$V4!="count",]
-names(GC) <- c("species","diagnosis","read","gc")
-GC$species <- gsub("_total", "",GC$species)
-GC$gc <- as.numeric(as.character(GC$gc))
-@ 
+Aj <- read.delim("./Aj.cobl")
+Ac <- read.delim("./Ac.cobl")
+
+
 
 <<echo=false,results=hide>>=
 #converte to wide data format and make nice names

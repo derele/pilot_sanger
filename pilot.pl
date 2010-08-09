@@ -13,7 +13,7 @@ use Bio::Tools::Run::StandAloneBlast;
 # each species, and for each library this array contains the seq objects
 
 my %seq;
-my @files = <trace2seq/trimmed_fasta/*>;
+my @files = </home/ele/thesis/raw_data/trace2seq/trimmed_fasta/*>;
 
 for my $file (@files) {
   my $in  = Bio::SeqIO->new(-file => "$file" , '-format' => 'Fasta');
@@ -60,84 +60,86 @@ for my $seq(@{$seq{Aj_total}{good1}}) {
 ##included in the whole thing, for the meantime I just comment out the 
 ##calls that produce the comparison-tables of the blast-searches and use this files.
 
-system("./cobl.pl -i Ac_good1.fasta -d /home/ele/db/blastdb/nempep4/nempep4 -p blastx -d /home/ele/db/blastdb/fishpep1/fishpep1 -p blastx -d /home/ele/db/blastdb/fishrRNA/fishrRNA -p blastn -d /home/ele/db/blastdb/nemrRNA/nemrRNA -p blastn -o Ac_cobl_table.csv -e 0.6");
+system("/home/ele/thesis/scripts/cobl.pl -i Ac_good1.fasta -d /home/ele/db/blastdb/nempep4/nempep4 -p blastx -d /home/ele/db/blastdb/fishpep1/fishpep1 -p blastx -d /home/ele/db/blastdb/fishrRNA/fishrRNA -p blastn -d /home/ele/db/blastdb/nemrRNA/nemrRNA -p blastn -e 0.6 > Ac.cobl");
 
-system("./cobl.pl -i Aj_good1.fasta -d /home/ele/db/blastdb/fishrRNA/fishrRNA -p blastn -d /home/ele/db/blastdb/fishpep1/fishpep1 -p blastx -o Aj_cobl_table.csv -e 0.6");
+system("/home/ele/thesis/scripts/cobl.pl -i Aj_good1.fasta -d /home/ele/db/blastdb/fishrRNA/fishrRNA -p blastn -d /home/ele/db/blastdb/fishpep1/fishpep1 -p blastx -e 0.6 > Aj.cobl");
 
-#read the cobl.pl (blast-comparison) tables
-open(ACCOBL, "Ac_cobl_table.csv") or die "can`t open file: $!";
-open(AJCOBL, "Aj_cobl_table.csv") or die "can`t open file: $!";;
-my @cobl = (<ACCOBL>, <AJCOBL>);
-close (ACCOBL);
-close (AJCOBL);
+# I rather do this part in R!
 
-my %gc_of;
+# #read the cobl.pl (blast-comparison) tables
+# open(ACCOBL, "Ac_cobl_table.csv") or die "can`t open file: $!";
+# open(AJCOBL, "Aj_cobl_table.csv") or die "can`t open file: $!";;
+# my @cobl = (<ACCOBL>, <AJCOBL>);
+# close (ACCOBL);
+# close (AJCOBL);
 
-COBL:for (@cobl) {
-  my @temp = split (/\t/, $_ );
-  my $read = $temp[0];
-  my $db = $temp[1];
-  my $annot = $temp[4];
- SEQOB:for my $spec("Ac_total", "Aj_total"){
-    for (@{$seq{$spec}{'good1'}}){
-      my $seq_obj = $_;
-      my $id =  $seq_obj -> primary_id;
-      my $gc = gc_percent($seq_obj -> seq);
-      if ($id =~ m/($read)/) {
-        my $lib=$+;
-        $lib =~ s/(f|r)*_(\d){2,3}_*\w\d\d$//;
-        if ($db =~ m/fishpep1/ and $spec =~ m/Ac/) {
-          $seq_obj -> desc("similar to "."$annot");
-          push (@{$seq{$spec}{'fishpep'}}, $seq_obj);
-          push (@{$seq{$lib}{'fishpep'}}, $seq_obj);
-          $gc_of{$spec}{'fishpep'}{$id} = $gc;
-          next COBL;
-        }
-        if ($db =~ m/rRNA/) {
-          $seq_obj -> desc("similar to "."$annot");
-          push (@{$seq{$spec}{'rRNA'}}, $seq_obj);
-          push (@{$seq{$lib}{'rRNA'}}, $seq_obj);
-          next COBL;
-        }
-        push (@{$seq{$spec}{'good2'}}, $seq_obj);
-        push (@{$seq{$lib}{'good2'}}, $seq_obj);
-        $gc_of{$spec}{'good2'}{$id} = $gc;
-        next COBL;
-      }
-    }
-  }
-}
+# my %gc_of;
 
-#print out the numbers per library 
-while (my($spec, $outer) = each(%seq)) {
-  while (my ($diagnosis, $middle) = each(%$outer)){
-    my $number = scalar @$middle;
-    print "$spec,$diagnosis,$number,count\n";
-  }
-}
+# COBL:for (@cobl) {
+#   my @temp = split (/\t/, $_ );
+#   my $read = $temp[0];
+#   my $db = $temp[1];
+#   my $annot = $temp[4];
+#  SEQOB:for my $spec("Ac_total", "Aj_total"){
+#     for (@{$seq{$spec}{'good1'}}){
+#       my $seq_obj = $_;
+#       my $id =  $seq_obj -> primary_id;
+#       my $gc = gc_percent($seq_obj -> seq);
+#       if ($id =~ m/($read)/) {
+#         my $lib=$+;
+#         $lib =~ s/(f|r)*_(\d){2,3}_*\w\d\d$//;
+#         if ($db =~ m/fishpep1/ and $spec =~ m/Ac/) {
+#           $seq_obj -> desc("similar to "."$annot");
+#           push (@{$seq{$spec}{'fishpep'}}, $seq_obj);
+#           push (@{$seq{$lib}{'fishpep'}}, $seq_obj);
+#           $gc_of{$spec}{'fishpep'}{$id} = $gc;
+#           next COBL;
+#         }
+#         if ($db =~ m/rRNA/) {
+#           $seq_obj -> desc("similar to "."$annot");
+#           push (@{$seq{$spec}{'rRNA'}}, $seq_obj);
+#           push (@{$seq{$lib}{'rRNA'}}, $seq_obj);
+#           next COBL;
+#         }
+#         push (@{$seq{$spec}{'good2'}}, $seq_obj);
+#         push (@{$seq{$lib}{'good2'}}, $seq_obj);
+#         $gc_of{$spec}{'good2'}{$id} = $gc;
+#         next COBL;
+#       }
+#     }
+#   }
+# }
 
-#print out a table of GC contents
-while (my ($spec, $read_hash) = each (%gc_of)) {
-  while (my ($diagnosis, $inner_hash)= each (%$read_hash)) {
-    while (my ($read, $gc)= each (%$inner_hash)) {
-      print "$spec,$diagnosis,$read,$gc\n",
-    }
-  }
-}
+# #print out the numbers per library 
+# while (my($spec, $outer) = each(%seq)) {
+#   while (my ($diagnosis, $middle) = each(%$outer)){
+#     my $number = scalar @$middle;
+#     print "$spec,$diagnosis,$number,count\n";
+#   }
+# }
 
-sub gc_percent{
-  my $sequence=$_[0];
-  my $gc_count;
-  my @DNA=split('',$sequence);
-  for my $base(@DNA){
-    if ($base =~ /^(G|C)/i){
-      ++$gc_count;
-    }
-  }
-  my $gc_percent = ($gc_count/length($sequence))*100;
-  $gc_percent = sprintf("%.2f", $gc_percent);
-  return($gc_percent);
-}
+# #print out a table of GC contents
+# while (my ($spec, $read_hash) = each (%gc_of)) {
+#   while (my ($diagnosis, $inner_hash)= each (%$read_hash)) {
+#     while (my ($read, $gc)= each (%$inner_hash)) {
+#       print "$spec,$diagnosis,$read,$gc\n",
+#     }
+#   }
+# }
+
+# sub gc_percent{
+#   my $sequence=$_[0];
+#   my $gc_count;
+#   my @DNA=split('',$sequence);
+#   for my $base(@DNA){
+#     if ($base =~ /^(G|C)/i){
+#       ++$gc_count;
+#     }
+#   }
+#   my $gc_percent = ($gc_count/length($sequence))*100;
+#   $gc_percent = sprintf("%.2f", $gc_percent);
+#   return($gc_percent);
+# }
 
 __END__
 

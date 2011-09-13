@@ -1,0 +1,164 @@
+%% BioMed_Central_Bib_Style_v1.01
+
+\begin{thebibliography}{1}
+\providecommand{\url}[1]{[#1]}
+\providecommand{\urlprefix}{}
+
+\bibitem{heitlinger_massive_2009}
+Heitlinger E, Laetsch D, Weclawski U, Han YS, Taraschewski H: \textbf{Massive
+  encapsulation of larval {Anguillicoloides crassus} in the intestinal wall of
+  Japanese eels}. \emph{Parasites and Vectors} 2009, \textbf{2}:48,
+  [\urlprefix\url{http://www.parasitesandvectors.com/content/2/1/48}].
+
+\bibitem{parkinson_partigene--constructing_2004}
+Parkinson J, Anthony A, Wasmuth J, Schmid R, Hedley A, Blaxter M:
+  \textbf{{PartiGene--constructing} partial genomes}. \emph{Bioinformatics}
+  2004, \textbf{20}(9):1398--1404,
+  [\urlprefix\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstrac%
+t/20/9/1398}].
+
+\bibitem{ewing_base-calling_1998}
+Ewing B, Hillier L, Wendl MC, Green P: \textbf{{Base-Calling} of automated
+  sequencer traces using {Phred. I.} {Accuracy Assessment}}. \emph{Genome Res.}
+  1998, \textbf{8}(3):175--185,
+  [\urlprefix\url{http://genome.cshlp.org/cgi/content/abstract/8/3/175}].
+
+\bibitem{PHRAP}
+Green P: \emph{PHRAP documentation.} 1994,
+  [\urlprefix\url{http://www.phrap.org}].
+
+\bibitem{R_project}
+{R Development Core Team}: \emph{R: A language and environment for statistical
+  computing}. R Foundation for Statistical Computing, Vienna, Austria 2009,
+  [\urlprefix\url{http://www.R-project.org}].
+
+\bibitem{lmucs-papers:Leisch:2002}
+Leisch F: \textbf{Sweave: Dynamic Generation of Statistical Reports Using
+  Literate Data Analysis}. In \emph{Compstat 2002 --- Proceedings in
+  Computational Statistics}. Edited by H{\"a}rdle W, R{\"o}nz B, Physica
+  Verlag, Heidelberg 2002:575--580,
+  [\urlprefix\url{http://www.stat.uni-muenchen.de/~leisch/Sweave}]. [ISBN
+  3-7908-1517-9].
+
+\bibitem{estscan}
+Iseli C, Jongeneel C, Bucher P: \textbf{{ESTScan:} a program for detecting,
+  evaluating, and reconstructing potential coding regions in {EST} sequences.}
+  \emph{Proc Int Conf Intell Syst Mol Biol} 1999, :138--148,
+  [\urlprefix\url{http://www.ncbi.nlm.nih.gov/pubmed/10786296}].
+
+\end{thebibliography}
+
+\newcommand{\BMCxmlcomment}[1]{}
+
+\BMCxmlcomment{
+
+<refgrp>
+
+<bibl id="B1">
+  <title><p>Massive encapsulation of larval {Anguillicoloides crassus} in the
+  intestinal wall of Japanese eels</p></title>
+  <aug>
+    <au><snm>Heitlinger</snm><fnm>E</fnm></au>
+    <au><snm>Laetsch</snm><fnm>D</fnm></au>
+    <au><snm>Weclawski</snm><fnm>U</fnm></au>
+    <au><snm>Han</snm><fnm>YS</fnm></au>
+    <au><snm>Taraschewski</snm><fnm>H</fnm></au>
+  </aug>
+  <source>Parasites and Vectors</source>
+  <pubdate>2009</pubdate>
+  <volume>2</volume>
+  <issue>1</issue>
+  <fpage>48</fpage>
+  <url>http://www.parasitesandvectors.com/content/2/1/48</url>
+</bibl>
+
+<bibl id="B2">
+  <title><p>{PartiGene--constructing} partial genomes</p></title>
+  <aug>
+    <au><snm>Parkinson</snm><fnm>J</fnm></au>
+    <au><snm>Anthony</snm><fnm>A</fnm></au>
+    <au><snm>Wasmuth</snm><fnm>J</fnm></au>
+    <au><snm>Schmid</snm><fnm>R</fnm></au>
+    <au><snm>Hedley</snm><fnm>A</fnm></au>
+    <au><snm>Blaxter</snm><fnm>M</fnm></au>
+  </aug>
+  <source>Bioinformatics</source>
+  <pubdate>2004</pubdate>
+  <volume>20</volume>
+  <issue>9</issue>
+  <fpage>1398</fpage>
+  <lpage>-1404</lpage>
+  <url>http://bioinformatics.oxfordjournals.org/cgi/content/abstract/20/9/1398%
+</url>
+</bibl>
+
+<bibl id="B3">
+  <title><p>{Base-Calling} of automated sequencer traces using {Phred. I.}
+  {Accuracy Assessment}</p></title>
+  <aug>
+    <au><snm>Ewing</snm><fnm>B</fnm></au>
+    <au><snm>Hillier</snm><fnm>{LaDeana}</fnm></au>
+    <au><snm>Wendl</snm><fnm>MC</fnm></au>
+    <au><snm>Green</snm><fnm>P</fnm></au>
+  </aug>
+  <source>Genome Res.</source>
+  <pubdate>1998</pubdate>
+  <volume>8</volume>
+  <issue>3</issue>
+  <fpage>175</fpage>
+  <lpage>-185</lpage>
+  <url>http://genome.cshlp.org/cgi/content/abstract/8/3/175</url>
+</bibl>
+
+<bibl id="B4">
+  <title><p>PHRAP documentation.</p></title>
+  <aug>
+    <au><snm>Green</snm><fnm>P</fnm></au>
+  </aug>
+  <pubdate>1994</pubdate>
+  <url>http://www.phrap.org</url>
+</bibl>
+
+<bibl id="B5">
+  <title><p>R: A language and environment for statistical computing</p></title>
+  <aug>
+    <au><cnm>{R Development Core Team}</cnm></au>
+  </aug>
+  <publisher>Vienna, Austria</publisher>
+  <pubdate>2009</pubdate>
+  <url>http://www.R-project.org</url>
+</bibl>
+
+<bibl id="B6">
+  <title><p>Sweave: Dynamic Generation of Statistical Reports Using Literate
+  Data Analysis</p></title>
+  <aug>
+    <au><snm>Leisch</snm><fnm>F</fnm></au>
+  </aug>
+  <source>Compstat 2002 --- Proceedings in Computational Statistics</source>
+  <publisher>Physica Verlag, Heidelberg</publisher>
+  <editor>Wolfgang H{\"a}rdle and Bernd R{\"o}nz</editor>
+  <pubdate>2002</pubdate>
+  <fpage>575</fpage>
+  <lpage>-580</lpage>
+  <url>http://www.stat.uni-muenchen.de/~leisch/Sweave</url>
+  <note>ISBN 3-7908-1517-9</note>
+</bibl>
+
+<bibl id="B7">
+  <title><p>{ESTScan:} a program for detecting, evaluating, and reconstructing
+  potential coding regions in {EST} sequences.</p></title>
+  <aug>
+    <au><snm>Iseli</snm><fnm>C</fnm></au>
+    <au><snm>Jongeneel</snm><fnm>CV</fnm></au>
+    <au><snm>Bucher</snm><fnm>P</fnm></au>
+  </aug>
+  <source>Proc Int Conf Intell Syst Mol Biol</source>
+  <pubdate>1999</pubdate>
+  <fpage>138</fpage>
+  <lpage>148</lpage>
+  <url>http://www.ncbi.nlm.nih.gov/pubmed/10786296</url>
+</bibl>
+
+</refgrp>
+} % end of \BMCxmlcomment

@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
+The top-level auxiliary file: pilot.aux
+The style file: /home/ele/bibtex/bmc_article.bst.bst
+Reallocated wiz_functions (elt_size=4) to 6000 items from 240518171576.
+Database file #1: /home/ele/bibtex/master.bib.bib
+You've used 7 entries,
+            3603 wiz_defined-function locations,
+            748 strings with 6737 characters,
+and the built_in function-call counts, 14397 in all, are:
+= -- 1343
+> -- 76
+< -- 28
++ -- 86
+- -- 23
+* -- 1617
+:= -- 2469
+add.period$ -- 14
+call.type$ -- 7
+change.case$ -- 26
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 902
+empty$ -- 1136
+format.name$ -- 91
+if$ -- 2867
+int.to.chr$ -- 0
+int.to.str$ -- 14
+missing$ -- 319
+newline$ -- 138
+num.names$ -- 15
+pop$ -- 242
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 14
+skip$ -- 148
+stack$ -- 0
+substring$ -- 2249
+swap$ -- 232
+text.length$ -- 12
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 4
+warning$ -- 0
+while$ -- 72
+width$ -- 8
+write$ -- 237

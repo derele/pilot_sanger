@@ -9,194 +9,19 @@
 \usepackage{lscape} 
 %\revision$Header: /home/ele/pilot_sanger/pilot.Rnw,v 1.1 2009/10/26 15:38:20 ele Exp $
 
+\usepackage{/usr/share/R/texmf/tex/latex/Sweave}
 \begin{document}
 
 \setkeys{Gin}{width=1.25\textwidth}
 
 
-<<echo=false, results=hide>>=
-#load required R libraries
-library(lattice)
-library(xtable)
-library(ggplot2)
-setwd("/home/ele/thesis/pilot_sanger/")
-source("/home/ele/thesis/454/common_R_functions.R")
-@ 
 
 %% TODO: add contour plots submit to ncbi!
 
 %%%%##########################################################################
-<<echo=false,results=hide,cache=TRUE>>=
-# execute the perl script to get the good sequences
-## system("/home/ele/thesis/pilot_sanger/pilot.pl")
-
-# read the diagnosis from file
-S <- read.delim("/home/ele/thesis/pilot_sanger/first_screen.csv", header=FALSE, sep = ",")
-names(S) <- c("lib", "diag", "count")
-@ 
-
-<<echo=false, results=hide>>=
-## converte to wide data format and make nice names
-S.first<- reshape(S,  direction="wide", v.names="count",  timevar="diag",  idvar="lib")
-names(S.first) <- gsub("count.","", names(S.first))
-row.names(S.first) <- S.first$lib
-S.first$lib <- NULL
 
 
-#### The blast evaluation ############
-## the fasta
-Ac.fasta <- read.sequences("./Ac_good1.fasta")
-names(Ac.fasta) <- gsub(" .*", "", names(Ac.fasta))
 
-Aj.fasta <- read.sequences("./Aj_good1.fasta")
-names(Aj.fasta) <- gsub(" .*", "", names(Aj.fasta))
-
-Ac_fr <- read.blast.best("./Ac_vs_fishrRNA.blt")
-Ac_fr$db <- "fishrRNA"
-
-Ac_nr <- read.blast.best("./Ac_vs_nemrRNA.blt")
-Ac_nr$db <- "nemrRNA"
-
-Ac_nn <- read.blast.best("./Ac_vs_nempep_nuc.blt")
-Ac_nn$db <- "nempep"
-
-Ac_n <- rbind(Ac_fr, Ac_nr, Ac_nn)
-Ac_n <- Ac_n[order(Ac_n$V1, Ac_n$V12, decreasing=TRUE),]
-Ac_n <- Ac_n[!duplicated(Ac_n$V1),]
-
-Ac.len <- as.data.frame(nchar(Ac.fasta))
-names(Ac.len) <- "length"
-
-Ac_n <- merge(Ac_n, Ac.len, by.x="V1", by.y="row.names")
-
-## reduce blast here ???
-
-Ac_fp<- read.blast.best("./Ac_vs_fishpep_pro.blt")
-Ac_fp$db <- "fishpep"
-
-Ac_np<- read.blast.best("./Ac_vs_nempep_pro.blt")
-Ac_np$db <- "nempep"
-
-Ac_p <- rbind(Ac_fp, Ac_np)
-Ac_p <- Ac_p[order(Ac_p$V1, Ac_p$V12, decreasing=TRUE),]
-Ac_p <- Ac_p[!duplicated(Ac_p$V1),]
-
-Aj_r<- read.blast.best("./Aj_vs_fishrRNA.blt")
-
-Ac_n$lib <- gsub( "[f|r]*_\\d{1,3}\\w\\d\\d$", "", Ac_n$V1 )
-Ac_p$lib <- gsub( "[f|r]*_\\d{1,3}\\w\\d\\d$", "", Ac_p$V1 )
-Aj_r$lib <- gsub( "[f|r]*_\\d{1,3}\\w\\d\\d$", "", Aj_r$V1 )
-
-Ac.rRNA <- as.data.frame(apply(table(Ac_n$lib, Ac_n$db)[, c(1,3)], 1, sum))
-names(Ac.rRNA) <- "rRNA"
-
-Aj.rRNA <- as.data.frame(table(Aj_r$lib))
-row.names(Aj.rRNA) <- Aj.rRNA$Var1
-Aj.rRNA$Var1 <- NULL
-names(Aj.rRNA) <- "rRNA"
-
-Ac.fish <- as.data.frame(table(Ac_p$lib, Ac_p$db)[,1])
-names(Ac.fish) <- "fishpep"
-
-rRNA <- rbind(Ac.rRNA, Aj.rRNA)
-
-S.first <- merge(S.first, rRNA, by="row.names")
-
-S.first <- merge(S.first, Ac.fish, by.x="Row.names", by.y="row.names", all.x=TRUE)
-
-S.first$good <- S.first$total-S.first$rRNA-S.first$short-S.first$poly
-
-rownames(S.first) <- S.first$Row.names
-S.first$Row.names <- NULL
-
-S <- S.first
-
-S["Ac_total",] <- apply(S[grepl("Ac", rownames(S)), ], 2, sum)
-
-S["Aj_total",] <- apply(S[grepl("Aj", rownames(S)), ], 2, sum)
-
-## resort to look better
-col.wanted <- c("short", "poly","rRNA", "fishpep","good")#, "submitted")
-
-row.wanted <- c("Ac_197F","Ac_106F", "Ac_M175",
-                 "Ac_FM", "Ac_EH1", "Ac_total", "Aj_Li1", "Aj_Li2", "Aj_Li3", "Aj_total")
-
-ALL <- S[row.wanted, col.wanted]
-S <- S[row.wanted, ]
-
-bad.Ac.rRNA <- Ac_n[Ac_n$db%in%c("fishrRNA", "nemrRNA"), "V1"]
-bad.Ac.fish <- Ac_p[Ac_p$db%in%c("fishpep"), "V1"]
-
-bad.Ac <- unique(c(as.character(bad.Ac.rRNA), as.character(bad.Ac.fish)))
-bad.Aj <- as.character(Aj_r[, "V1"])
-@ 
-
-
-<<echo=FALSE, results=hide>>=
-## rescue the values that are needed in printtables but not in the rows
-
-total <- S$total
-ntotal <- paste("(n=",total, ")",sep ="")
-good <- S$good1
-ngood <- paste("(n=",good, ")",sep ="")
-nlib <- paste(row.names(S), ntotal, sep ="")
-
-# total n in the library description
-An <- as.data.frame(ALL, row.names=nlib)
-
-# function to calculate percentage from good
-gperc <- function(x){                      
-  round(x/good*100, digits=2)
-}
-# function to calculate percentage from total
-operc <- function(x){
-  round((x/total)*100, digits=2)
-}
-
-GP <- apply(ALL[,c("rRNA", "fishpep")],2,gperc)
-colnames(GP) <- paste (colnames(GP), "_from_good",sep="")
-OP <- apply(ALL,2,operc)
-colnames(OP) <- paste (colnames(OP), "_from_total",sep="")
-perc <- cbind (OP, GP)
-
-dotrRNA <- dotplot(perc[,c("rRNA_from_total", "rRNA_from_good")],
-        groups=FALSE, 
-        aspect=1,
-        type=c("p", "h"), 
-        scales=list(y=list(relation="free", rot=-45, labels=list(c(nlib),  c(ngood))), x=list(relation="free")
-          ), 
-        xlab= "rRNA-reads in percent from total and from sequences remaining after first trimming", 
-        ylab= "library", 
-        between=list(x=-1.95), 
-        )
-
-Ac.gc <- get.gc(Ac.fasta[!names(Ac.fasta)%in%bad.Ac])
-Aj.gc <- get.gc(Aj.fasta[!names(Aj.fasta)%in%bad.Aj])
-
-GC <- as.data.frame(c(Ac.gc, Aj.gc))
-GC$species <- ifelse(grepl("Ac", rownames(GC)), "Anguillicola crassus", "Anguilla japonica")
-names(GC)[1] <- "gc"
-
-gc.mean <- tapply(GC$gc, GC$species, mean)
-gc.sd <- tapply(GC$gc, GC$species, sd)
-
-gc.viol <- bwplot(species~gc,
-                  data=GC,
-                  panel = panel.violin,
-                  #layout = c(1,1),
-                  xlab="",
-                  scales=(list(y=list(cex=1.5, alternating=2))), 
-                  )
-gc.dens <- densityplot(~gc,
-                       groups=species,
-                       data=GC,
-                       plot.points=FALSE,
-                       #layout = c(2,1),
-                       auto.key=list(x = 0.8, y = 0.95, size = 2, cex=1.5),
-                       xlim=c(15, 75)
-                       )
-
-@
 
 \title{The transcriptome of \textit{Anguillicoloides crassus}. Part A:
   Pilot-sequencing} \author{Emanuel G Heitlinger} \date{}
@@ -206,19 +31,19 @@ gc.dens <- densityplot(~gc,
 In preparation of high-throughput transcriptome sequencing of the
 swimbladder nematode \textit{Anguillicoloides crassus} expressed
 sequence tags (ESTs) were generated using traditional
-Sanger-technology. In total \Sexpr{ALL["Ac_total","total"]} reads from
+Sanger-technology. In total  reads from
 adult \textit{A. crassus} (5 libraries from 4 cDNA preparations) and
-\Sexpr{ALL["Aj_total","total"]} reads from liver-tissue of the host
+ reads from liver-tissue of the host
 species \textit{Anguilla japonica} (3 libraries from 3 cDNA
-preparations) were sequenced. \Sexpr{ALL["Ac_total", "good1"]} of the
-nematode and \Sexpr{ALL["Aj_total", "good1"]} of the host reads were
+preparations) were sequenced.  of the
+nematode and  of the host reads were
 of sufficient quality for further processing. The low number of high
 quality ESTs can be explained by a high degree of rRNA contamination
 present in all libraries. Additionally
-\Sexpr{ALL["Ac_total","fishpep"]} sequences originating from
+30 sequences originating from
 host-contamination had to be removed from the \textit{A. crassus}
 data-set for submission to NCBI-dbEST, reducing it to
-\Sexpr{ALL["Ac_total","good2"]} ESTs. Nevertheless the stringent
+ ESTs. Nevertheless the stringent
 quality trimming and processing of raw reads, as summarized in the
 present document, make the remaining ESTs a valuable resource for
 comparison with future 454-sequencing-data.
@@ -388,24 +213,43 @@ trimming by trace2seq) in the libraries prepared by students. For
 sequences of \textit{Anguilla japonica} and the other libraries from
 \textit{A. crassus} failed sequencing reactions were less common.
 
-<< results = tex,echo = FALSE >>= 
-xtable(An, caption = "Total numbers for screening statistics of A. crassus.", display = c("s", rep("d",
-times = 5)), label = "tab:num")
-@
-
+% latex table generated in R 2.13.0 by xtable 1.5-6 package
+% Tue Sep 13 15:37:32 2011
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrr}
+  \hline
+ & short & poly & rRNA & fishpep & good \\ 
+  \hline
+Ac\_197F(n=96) &   4 &  17 &  49 &   4 &  26 \\ 
+  Ac\_106F(n=96) &  25 &   9 &  44 &   2 &  18 \\ 
+  Ac\_M175(n=116) &  30 &  19 &  38 &   6 &  29 \\ 
+  Ac\_FM(n=96) &  12 &  29 &  25 &   4 &  30 \\ 
+  Ac\_EH1(n=541) & 297 &  51 & 119 &  14 &  74 \\ 
+  Ac\_total(n=945) & 368 & 125 & 275 &  30 & 177 \\ 
+  Aj\_Li1(n=96) &  10 &  23 &  50 &  &  13 \\ 
+  Aj\_Li2(n=96) &  10 &  26 &  43 &  &  17 \\ 
+  Aj\_Li3(n=96) &   9 &  15 &  66 &  &   6 \\ 
+  Aj\_total(n=288) &  29 &  64 & 159 &  &  36 \\ 
+   \hline
+\end{tabular}
+\caption{Total numbers for screening statistics of A. crassus.}
+\label{tab:num}
+\end{center}
+\end{table}
 In the next screening-step for \textit{A. crassus}
-\Sexpr{ALL["Ac_total","poly"]}
-(\Sexpr{perc["Ac_total","poly_from_total"]}\%) and for
-\textit{Anguilla japonica}  \Sexpr{ALL["Aj_total","poly"]} (
-\Sexpr{perc["Aj_total","poly_from_total"]}\%) of the sequences were
+125
+(13.23\%) and for
+\textit{Anguilla japonica}  64 (
+22.22\%) of the sequences were
 excluded because of homopolymer-runs considered artificial.
 
 \subsection*{rRNA screening (see also table \ref{tab:num})}
 
 The further screening of \textit{Anguillicoloides} sequences revealed
 a high amount of rRNA contamination (see fig.\ref{fig:rRNA}) ranging
-from \Sexpr{min(perc[c(5:9),"rRNA_from_good"])}\% to
-\Sexpr{max(perc[c(5:9),"rRNA_from_good"])}\%. One reason to sequence
+from 60.84\% to
+91.67\%. One reason to sequence
 the libraries from the eels host was to elucidate whether this
 contamination was nematode or species-typical (e.g caused by poly-dT
 primers binding to A-rich rRNA regions), or caused by shortcomings in
@@ -413,34 +257,29 @@ the preparation.
 
 Even higher amounts of rRNA were found in these host-libraries (see
 fig. \ref{fig:rRNA}), ranging from
-\Sexpr{min(perc[c(7:9),"rRNA_from_good"])}\% to
-\Sexpr{max(perc[c(1:5),"rRNA_from_good"])}\% . This contamination in
+71.67\% to
+70.97\% . This contamination in
 libraries from both species was mainly responsible for a low ammount
 of sequences beeing of sufficient quality for submission to
 NCBI-dbEST.
 
 \begin{figure}[ht]
   \centering \advance\leftskip-2.275cm
-<< fig = TRUE,echo = FALSE, height = 6, width = 10 >>= 
-  print(dotrRNA)
-@
+\includegraphics{pilot-006}
 \caption{Proportion of rRNA contamination in different libraries for
   \textit{A. crassus}.}
 \label{fig:rRNA}
 \end{figure}
 
-<< echo = false,results = hide >>= 
-tee <- t.test(GC$gc[GC$species == "Anguillicola crassus"], GC$gc[GC$species == "Anguilla japonica"])
-@
 
 \subsection*{Screening for host-contamination)}
 
 The GC-content of \textit{A. crassus} ESTs gave first pointers on
 possible contamination still left in the sequences after these
 steps. \textit{A. crassus} had a lower mean GC-content (p < 0.001)
-$(\Sexpr{round(gc.mean["Ac"],2)} \pm \Sexpr{round(gc.sd["Ac"],2)}$
+NA
 mean $\pm$ sd) than \textit{Anguilla japonica}
-$(\Sexpr{round(gc.mean["Aj"],2)} \pm \Sexpr{round(gc.sd["Aj"],2)}$
+NA
 mean $\pm$ sd). The probability density function of GC-contents
 pointed on some unusual sequences containing as high as 65\% GC (see
 fig. \ref{fig:GC}) in the \textit{A. crassus} set. Further inspection
@@ -452,9 +291,7 @@ inferred.
 
 \begin{figure}[ht]
   \centering \advance\leftskip-2.275cm
-<< fig = TRUE,echo = FALSE, height = 6, width = 10 >>= 
-print(gc.dens)
-@
+\includegraphics{pilot-008}
 \caption{GC-content of sequences from \textit{Anguilla japonica} and
   \textit{A.crassus}.}
 \label{fig:GC}
@@ -510,12 +347,12 @@ from the plant \textit{Pisum sativum}.
 
 \section*{Discussion}
 
-A total of \Sexpr{ALL["Ac_total","total"]} sequencing-reads from
+A total of  sequencing-reads from
 \textit{A. crassus} (4 different libraries) and
-\Sexpr{ALL["Aj_total","total"]} reads from liver tissue (3 libraries)
+ reads from liver tissue (3 libraries)
 of the host species \textit{Anguilla japonica} resulted in
-\Sexpr{ALL["Ac_total","good"]} nematode- and
-\Sexpr{ALL["Aj_total","good"]} host quality ESTs submittable to NCBI
+177 nematode- and
+36 host quality ESTs submittable to NCBI
 dbEST. The low proportion of high quality ESTs is mainly a result of a
 high degree of rRNA contamination present in all libraries and of the
 fact that 40\% of the sequencing rections for

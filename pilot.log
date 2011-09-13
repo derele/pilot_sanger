@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.9.20)  13 SEP 2011 15:37
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.9.20)  13 SEP 2011 16:08
 entering extended mode
  %&-line parsing enabled.
 **\nonstopmode \input{/home/ele/thesis/pilot_sanger/pilot.tex}
@@ -262,38 +262,38 @@ LaTeX Info: Redefining \pageref on input line 13.
 \openout4 = `pilot.out'.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 29.
+(Font)              <14.4> on input line 28.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 29.
-LaTeX Font Info:    Try loading font information for TS1+aer on input line 57.
-LaTeX Font Info:    No file TS1aer.fd. on input line 57.
+(Font)              <7> on input line 28.
+LaTeX Font Info:    Try loading font information for TS1+aer on input line 56.
+LaTeX Font Info:    No file TS1aer.fd. on input line 56.
 
 
 LaTeX Font Warning: Font shape `TS1/aer/m/n' undefined
 (Font)              using `TS1/cmr/m/n' instead
-(Font)              for symbol `textbullet' on input line 57.
+(Font)              for symbol `textbullet' on input line 56.
 
 [1
 
 {/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 91.
+(Font)              <12> on input line 90.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 91.
+(Font)              <8> on input line 90.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 91.
+(Font)              <6> on input line 90.
  [2pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
 has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.126 
+l.125 
       ]
-LaTeX Font Info:    Try loading font information for T1+aett on input line 155.
+LaTeX Font Info:    Try loading font information for T1+aett on input line 154.
 
  (/usr/share/texmf/tex/latex/ae/t1aett.fd
 File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
 ) [3]
-Overfull \hbox (4.58167pt too wide) in paragraph at lines 240--246
+Overfull \hbox (4.58167pt too wide) in paragraph at lines 239--245
 \T1/aer/m/it/12 japon-ica \T1/aer/m/n/12 64 ( 22.22%) of the se-quences were ex
 -cluded be-cause of homopolymer-
  []
@@ -301,14 +301,14 @@ Overfull \hbox (4.58167pt too wide) in paragraph at lines 240--246
 [4] <pilot-006.pdf, id=60, 722.7pt x 433.62pt>
 File: pilot-006.pdf Graphic file (type pdf)
  <use pilot-006.pdf>
-Overfull \hbox (32.77016pt too wide) in paragraph at lines 268--270
+Overfull \hbox (32.77016pt too wide) in paragraph at lines 267--269
  [][] 
  []
 
 <pilot-008.pdf, id=62, 722.7pt x 433.62pt>
 File: pilot-008.pdf Graphic file (type pdf)
  <use pilot-008.pdf>
-Overfull \hbox (32.77016pt too wide) in paragraph at lines 294--296
+Overfull \hbox (32.77016pt too wide) in paragraph at lines 293--295
  [][] 
  []
 
@@ -316,9 +316,9 @@ Overfull \hbox (32.77016pt too wide) in paragraph at lines 294--296
 as been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.309 
+l.308 
       ]
-Overfull \hbox (10.27841pt too wide) in paragraph at lines 344--347
+Overfull \hbox (10.27841pt too wide) in paragraph at lines 343--346
 []\T1/aer/m/n/12 Anoter se-quence for wich a xeno-bi-otic ori-gin seems pessibl
 e is Ac_FM_08D01
  []
@@ -327,19 +327,19 @@ e is Ac_FM_08D01
 has been already used, duplicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.361 
+l.360 
        </home/ele/thesis/pilot_sanger/pilot-006.pdf>] [7pdfTeX warning (ext4): 
 destination with the same identifier (name{figure.2}) has been already used, du
 plicate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.381 
+l.380 
        </home/ele/thesis/pilot_sanger/pilot-008.pdf>] [8pdfTeX warning (ext4): 
 destination with the same identifier (name{table.3}) has been already used, dup
 licate ignored
 <to be read again> 
                    \endgroup \set@typeset@protect 
-l.412 \newpage
+l.411 \newpage
               ] (/home/ele/thesis/pilot_sanger/pilot.bbl
 Underfull \hbox (badness 1132) in paragraph at lines 21--25
 []\T1/aer/m/n/12 Ewing B, Hillier L, Wendl MC, Green P: \T1/aer/bx/n/12 Base-Ca
@@ -366,7 +366,7 @@ usr/share/texmf/fonts/type1/bluesky/cm/cmr17.pfb></usr/share/texmf/fonts/type1/
 bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/s
 hare/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/blues
 ky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmtt12.pfb>
-Output written on pilot.pdf (9 pages, 128884 bytes).
+Output written on pilot.pdf (9 pages, 128882 bytes).
 PDF statistics:
  159 PDF objects out of 1000 (max. 8388607)
  31 named destinations out of 1000 (max. 131072)

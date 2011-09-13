@@ -23,7 +23,6 @@ setwd("/home/ele/thesis/pilot_sanger/")
 source("/home/ele/thesis/454/common_R_functions.R")
 @ 
 
-%% TODO: add contour plots submit to ncbi!
 
 %%%%##########################################################################
 <<echo=false,results=hide,cache=TRUE>>=
@@ -41,7 +40,6 @@ S.first<- reshape(S,  direction="wide", v.names="count",  timevar="diag",  idvar
 names(S.first) <- gsub("count.","", names(S.first))
 row.names(S.first) <- S.first$lib
 S.first$lib <- NULL
-
 
 #### The blast evaluation ############
 ## the fasta
@@ -87,6 +85,8 @@ Ac_n$lib <- gsub( "[f|r]*_\\d{1,3}\\w\\d\\d$", "", Ac_n$V1 )
 Ac_p$lib <- gsub( "[f|r]*_\\d{1,3}\\w\\d\\d$", "", Ac_p$V1 )
 Aj_r$lib <- gsub( "[f|r]*_\\d{1,3}\\w\\d\\d$", "", Aj_r$V1 )
 
+bad.Ac.rRNA <- Ac_n[Ac_n$db%in%c("fishrRNA", "nemrRNA"), "V1"]
+
 Ac.rRNA <- as.data.frame(apply(table(Ac_n$lib, Ac_n$db)[, c(1,3)], 1, sum))
 names(Ac.rRNA) <- "rRNA"
 
@@ -95,6 +95,9 @@ row.names(Aj.rRNA) <- Aj.rRNA$Var1
 Aj.rRNA$Var1 <- NULL
 names(Aj.rRNA) <- "rRNA"
 
+bad.Aj <- as.character(Aj_r[, "V1"])
+
+Ac_p <- Ac_p[!Ac_p$V1%in%bad.Ac.rRNA, ]
 Ac.fish <- as.data.frame(table(Ac_p$lib, Ac_p$db)[,1])
 names(Ac.fish) <- "fishpep"
 
@@ -104,7 +107,8 @@ S.first <- merge(S.first, rRNA, by="row.names")
 
 S.first <- merge(S.first, Ac.fish, by.x="Row.names", by.y="row.names", all.x=TRUE)
 
-S.first$good <- S.first$total-S.first$rRNA-S.first$short-S.first$poly
+S.first$good <- S.first$total-S.first$rRNA-S.first$short-S.first$poly-S.first$fishpep
+S.first[6:8, "good"] <- S.first[6:8,]$total-S.first[6:8,]$rRNA-S.first[6:8, ]$short-S.first[6:8, ]$poly
 
 rownames(S.first) <- S.first$Row.names
 S.first$Row.names <- NULL
@@ -124,15 +128,18 @@ row.wanted <- c("Ac_197F","Ac_106F", "Ac_M175",
 ALL <- S[row.wanted, col.wanted]
 S <- S[row.wanted, ]
 
-bad.Ac.rRNA <- Ac_n[Ac_n$db%in%c("fishrRNA", "nemrRNA"), "V1"]
+
 bad.Ac.fish <- Ac_p[Ac_p$db%in%c("fishpep"), "V1"]
 
 bad.Ac <- unique(c(as.character(bad.Ac.rRNA), as.character(bad.Ac.fish)))
-bad.Aj <- as.character(Aj_r[, "V1"])
 @ 
 
 
 <<echo=FALSE, results=hide>>=
+
+write(names(Ac.fasta)[!names(Ac.fasta)%in%bad.Ac], "good.Ac.acc")
+write(names(Aj.fasta)[!names(Aj.fasta)%in%bad.Aj], "good.Aj.acc")
+
 ## rescue the values that are needed in printtables but not in the rows
 
 total <- S$total

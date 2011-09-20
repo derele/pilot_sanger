@@ -18,14 +18,12 @@
 #load required R libraries
 library(lattice)
 library(xtable)
-library(ggplot2)
 setwd("/home/ele/thesis/pilot_sanger/")
 source("/home/ele/thesis/454/common_R_functions.R")
 @ 
 
-
 %%%%##########################################################################
-<<echo=false,results=hide,cache=TRUE>>=
+<<echo=false,results=hide>>=
 # execute the perl script to get the good sequences
 ## system("/home/ele/thesis/pilot_sanger/pilot.pl")
 
@@ -87,6 +85,36 @@ Aj_r$lib <- gsub( "[f|r]*_\\d{1,3}\\w\\d\\d$", "", Aj_r$V1 )
 
 bad.Ac.rRNA <- Ac_n[Ac_n$db%in%c("fishrRNA", "nemrRNA"), "V1"]
 
+## additional rRNA reads in nt??
+Ac_nt <- read.blast.best("./Ac_vs_nt.blt")
+
+## only not recognized by rRNA screening before
+Ac_nt <- Ac_nt[!Ac_nt$V1%in%bad.Ac.rRNA, ]
+
+## the unigque db-hit descriptions
+nt.gis <- unique(Ac_nt$V2)
+## refseq is not rRNA
+nt.gis <- nt.gis[!grepl("ref", nt.gis)]
+## embl is not rRNA
+nt.gis <- nt.gis[!grepl("emb", nt.gis)]
+
+nt.gis.rRNA <- c("gi|224814634|gb|FJ748547.1|", "gi|157787505|gb|EF990726.1|", "gi|255069274|dbj|AB513719.1|")
+
+Ac_n_plus_nt <- Ac_nt[Ac_nt$V2%in%nt.gis.rRNA |
+                      ## Two found manually
+                      Ac_nt$V1%in%"Ac_M175_01E05"|
+                      Ac_nt$V1%in%"Ac_FMf_08E10"
+                      , ]
+
+Ac_n_plus_nt$db <- "nemrRNA"
+Ac_n_plus_nt <- merge(Ac_n_plus_nt, Ac.len, by.x="V1", by.y="row.names")
+Ac_n_plus_nt$lib <- gsub( "[f|r]*_\\d{1,3}\\w\\d\\d$", "", Ac_n_plus_nt$V1 )
+
+Ac_n <- rbind(Ac_n, Ac_n_plus_nt)
+
+bad.Ac.rRNA <- Ac_n[Ac_n$db%in%c("fishrRNA", "nemrRNA"), "V1"]
+
+
 Ac.rRNA <- as.data.frame(apply(table(Ac_n$lib, Ac_n$db)[, c(1,3)], 1, sum))
 names(Ac.rRNA) <- "rRNA"
 
@@ -98,6 +126,9 @@ names(Aj.rRNA) <- "rRNA"
 bad.Aj <- as.character(Aj_r[, "V1"])
 
 Ac_p <- Ac_p[!Ac_p$V1%in%bad.Ac.rRNA, ]
+## remove one nematode protein
+Ac_p <- Ac_p[!Ac_p$V1%in%"Ac_106Ff_01A06", ]
+
 Ac.fish <- as.data.frame(table(Ac_p$lib, Ac_p$db)[,1])
 names(Ac.fish) <- "fishpep"
 
@@ -128,20 +159,21 @@ row.wanted <- c("Ac_197F","Ac_106F", "Ac_M175",
 ALL <- S[row.wanted, col.wanted]
 S <- S[row.wanted, ]
 
-
 bad.Ac.fish <- Ac_p[Ac_p$db%in%c("fishpep"), "V1"]
 
 bad.Ac <- unique(c(as.character(bad.Ac.rRNA), as.character(bad.Ac.fish)))
 @ 
 
-
 <<echo=FALSE, results=hide>>=
 
 write(names(Ac.fasta)[!names(Ac.fasta)%in%bad.Ac], "good.Ac.acc")
+
+write(names(Ac.fasta)[names(Ac.fasta)%in%bad.Ac.fish], "fish.Ac.acc")
+
 write(names(Aj.fasta)[!names(Aj.fasta)%in%bad.Aj], "good.Aj.acc")
 
-## rescue the values that are needed in printtables but not in the rows
 
+## rescue the values that are needed in printtables but not in the rows
 total <- S$total
 ntotal <- paste("(n=",total, ")",sep ="")
 good <- S$good1
@@ -211,24 +243,27 @@ gc.dens <- densityplot(~gc,
 
 \section*{Abstract}
 In preparation of high-throughput transcriptome sequencing of the
-swimbladder nematode \textit{Anguillicoloides crassus} expressed
-sequence tags (ESTs) were generated using traditional
-Sanger-technology. In total \Sexpr{ALL["Ac_total","total"]} reads from
-adult \textit{A. crassus} (5 libraries from 4 cDNA preparations) and
-\Sexpr{ALL["Aj_total","total"]} reads from liver-tissue of the host
-species \textit{Anguilla japonica} (3 libraries from 3 cDNA
-preparations) were sequenced. \Sexpr{ALL["Ac_total", "good1"]} of the
-nematode and \Sexpr{ALL["Aj_total", "good1"]} of the host reads were
-of sufficient quality for further processing. The low number of high
-quality ESTs can be explained by a high degree of rRNA contamination
-present in all libraries. Additionally
-\Sexpr{ALL["Ac_total","fishpep"]} sequences originating from
-host-contamination had to be removed from the \textit{A. crassus}
+swimbladder nematode \textit{A. crassus} expressed sequence tags
+(ESTs) were generated using traditional Sanger-technology. In total
+\Sexpr{S["Ac_total","total"]} reads from adult \textit{A. crassus} (5
+libraries from 4 cDNA preparations) and \Sexpr{S["Aj_total","total"]}
+reads from liver-tissue of the host species \textit{Anguilla japonica}
+(3 libraries from 3 cDNA preparations) were sequenced. After
+base-calling an quality screening \Sexpr{S["Ac_total","good1"]} of the
+nematode and \Sexpr{S["Aj_total","good1"]} of the host reads were of
+sufficient quality for further processing.
+
+\Sexpr{S["Ac_total","good"]} of the nematode and
+\Sexpr{S["Aj_total","good"]} of the host reads were of sufficient
+quality for submission to dbEST.
+
+Additionally \Sexpr{S["Ac_total","fishpep"]} sequences originating
+from host-contamination had to be removed from the \textit{A. crassus}
 data-set for submission to NCBI-dbEST, reducing it to
-\Sexpr{ALL["Ac_total","good2"]} ESTs. Nevertheless the stringent
-quality trimming and processing of raw reads, as summarized in the
-present document, make the remaining ESTs a valuable resource for
-comparison with future 454-sequencing-data.
+\Sexpr{S["Ac_total","good"]} ESTs. Nevertheless the stringent quality
+trimming and processing of raw reads, as summarized in the present
+document, make the remaining ESTs a valuable resource for comparison
+with future 454-sequencing-data.
 
 \section*{Introduction}
 

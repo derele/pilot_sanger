@@ -25,7 +25,11 @@ while (<>) {
     $primer = "M13R(GGCAGGAAACAGCTATGACC)";
     print $_ ;
   }
-  elsif ($_ =~ m/CLONE: \w+_*+!r_\d+\w\d+/) {
+  elsif ($_ =~ m/CLONE: \w+_*+f_\d+\w\d+/) {
+    $primer = "M13F(GTAAAACGACGGCCAGT)";
+    print $_ ;
+  }
+  elsif ($_ =~ m/CLONE: \w+_[A-Z|1-9]+_\d+\w\d+/) {
     $primer = "M13F(GTAAAACGACGGCCAGT)";
     print $_ ;
   }
